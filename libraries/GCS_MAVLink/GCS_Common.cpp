@@ -2815,6 +2815,7 @@ void GCS_MAVLINK::send_named_float(const char *name, float value) const
     mavlink_msg_named_value_float_send(chan, AP_HAL::millis(), float_name, value);
 }
 
+
 #if AP_AHRS_ENABLED
 void GCS_MAVLINK::send_home_position() const
 {
@@ -6199,7 +6200,7 @@ bool GCS_MAVLINK::try_send_message(const enum ap_message id)
         ret = send_relay_status();
         break;
 #endif
-
+    
     default:
         // try_send_message must always at some stage return true for
         // a message, or we will attempt to infinitely retry the

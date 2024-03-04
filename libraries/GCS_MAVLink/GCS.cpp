@@ -19,6 +19,8 @@
 #include <AP_OpticalFlow/AP_OpticalFlow.h>
 #include <AP_GPS/AP_GPS.h>
 
+#include <iostream>
+
 #include "MissionItemProtocol_Waypoints.h"
 #include "MissionItemProtocol_Rally.h"
 #include "MissionItemProtocol_Fence.h"
@@ -113,6 +115,25 @@ void GCS::send_named_float(const char *name, float value) const
 
     gcs().send_to_active_channels(MAVLINK_MSG_ID_NAMED_VALUE_FLOAT,
                                   (const char *)&packet);
+}
+
+void GCS::send_custom_pid_state(
+    const char *name, float input, float target,
+    float dt, float FF, float P, float I, float D
+) const {
+
+    mavlink_custom_pid_state_t packet {};
+    memcpy(packet.name, name, MIN(strlen(name), (uint8_t)MAVLINK_MSG_CUSTOM_PID_STATE_FIELD_NAME_LEN));
+    packet.input = input;
+    packet.target = target;
+    packet.dt = dt;
+    packet.FF = FF;
+    packet.P = P;
+    packet.I = I;
+    packet.D = D;
+    gcs().send_to_active_channels(MAVLINK_MSG_ID_CUSTOM_PID_STATE,
+                                  (const char *)&packet);
+                                  
 }
 
 #if HAL_HIGH_LATENCY2_ENABLED
